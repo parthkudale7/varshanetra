@@ -772,6 +772,16 @@ function updateRoads(risk) {
     const safeContainer =
         document.getElementById("safeRoads");
 
+    const safeSection =
+        document.getElementById("safeRoadsSection");
+
+    safeSection.style.display =
+        risk === "moderate" ||
+        risk === "high" ||
+        risk === "critical"
+            ? "block"
+            : "none";
+
 
     /* Clear previous roads */
 
@@ -1278,6 +1288,10 @@ function resetDashboard() {
         '<span class="road-placeholder">' +
         'No roads identified yet.' +
         '</span>';
+
+    document.getElementById(
+        "safeRoadsSection"
+    ).style.display = "none";
 
 
     document.getElementById(

@@ -752,6 +752,7 @@ button {
 /* ================= SAFE ROADS ================= */
 
 .safe-roads-section {
+    display: none;
     margin-top: 20px;
     padding-top: 18px;
     border-top: 1px solid #e6ebee;
