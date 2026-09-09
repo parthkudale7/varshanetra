@@ -1,0 +1,1007 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fa;
+    color: #263746;
+}
+
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    height: 100vh;
+
+    background: #172b3a;
+    color: white;
+
+    padding: 25px 18px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 10px;
+    margin-bottom: 40px;
+}
+
+.logo-icon {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #2f7895;
+
+    border-radius: 12px;
+
+    font-size: 23px;
+}
+
+.logo h2 {
+    font-size: 17px;
+}
+
+.logo p {
+    font-size: 11px;
+    color: #b8c8d3;
+
+    margin-top: 3px;
+}
+
+
+nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+nav a {
+    padding: 14px;
+
+    border-radius: 9px;
+
+    color: #cbd7df;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+nav a:hover,
+nav a.active {
+    background: #2f7895;
+    color: white;
+}
+
+
+.sidebar-bottom {
+    margin-top: auto;
+
+    border-top: 1px solid #3a4b58;
+
+    padding: 20px 10px;
+
+    font-size: 12px;
+
+    color: #9fb1bd;
+}
+
+.sidebar-bottom strong {
+    display: block;
+
+    color: white;
+
+    margin-top: 5px;
+}
+
+
+/* ================= MAIN ================= */
+
+.main {
+    margin-left: 250px;
+
+    padding: 25px;
+
+    max-width: 1600px;
+}
+
+
+/* ================= TOPBAR ================= */
+
+.topbar {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.topbar h1 {
+    font-size: 27px;
+}
+
+.topbar p {
+    color: #72818c;
+
+    margin-top: 6px;
+}
+
+.status {
+    background: white;
+
+    padding: 10px 15px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: bold;
+}
+
+.live-dot {
+    display: inline-block;
+
+    width: 9px;
+    height: 9px;
+
+    background: #24b36b;
+
+    border-radius: 50%;
+
+    margin-right: 6px;
+}
+
+
+/* ================= LOCATION ================= */
+
+.location-bar {
+    background: #2f4156;
+
+    color: white;
+
+    padding: 20px 25px;
+
+    border-radius: 14px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.location-bar span {
+    font-size: 12px;
+
+    color: #c5d5df;
+}
+
+.location-bar h2 {
+    margin-top: 5px;
+
+    font-size: 22px;
+}
+
+.coordinates {
+    font-size: 13px;
+
+    color: #d7e2e8;
+}
+
+
+/* ================= CARD ================= */
+
+.card {
+    background: white;
+
+    border-radius: 14px;
+
+    padding: 23px;
+
+    margin-bottom: 20px;
+
+    box-shadow: 0 3px 15px rgba(25, 45, 60, 0.06);
+}
+
+.card-heading {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.card-heading h2 {
+    font-size: 19px;
+}
+
+.card-heading p {
+    color: #788792;
+
+    font-size: 13px;
+
+    margin-top: 5px;
+}
+
+
+/* ================= INPUTS ================= */
+
+.inputs {
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    gap: 15px;
+}
+
+.input-box label {
+    display: block;
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+    margin-bottom: 8px;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-wrapper input,
+select {
+    width: 100%;
+
+    height: 45px;
+
+    border: 1px solid #d8e0e6;
+
+    border-radius: 8px;
+
+    padding: 0 45px 0 13px;
+
+    outline: none;
+
+    font-size: 14px;
+
+    background: white;
+}
+
+.input-wrapper input:focus,
+select:focus {
+    border-color: #2f7895;
+}
+
+.input-wrapper span {
+    position: absolute;
+
+    right: 12px;
+
+    top: 14px;
+
+    color: #7a8993;
+
+    font-size: 12px;
+}
+
+select {
+    padding-right: 10px;
+}
+
+
+/* ================= BUTTONS ================= */
+
+.run-area {
+    margin-top: 22px;
+
+    display: flex;
+
+    gap: 10px;
+}
+
+button {
+    border: none;
+
+    cursor: pointer;
+
+    border-radius: 9px;
+
+    padding: 13px 20px;
+
+    font-weight: bold;
+}
+
+.run-button {
+    background: #2f4156;
+
+    color: white;
+
+    font-size: 14px;
+
+    min-width: 230px;
+}
+
+.run-button:hover {
+    background: #213445;
+}
+
+.demo-button {
+    background: #e9f3f6;
+
+    color: #2f6178;
+}
+
+.reset-button {
+    background: #f0f2f4;
+
+    color: #566570;
+}
+
+.run-info {
+    margin-top: 10px;
+
+    color: #87949d;
+
+    font-size: 12px;
+}
+
+
+/* ================= BADGES ================= */
+
+.badge {
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: bold;
+
+    background: #edf0f2;
+
+    color: #6b7780;
+}
+
+.input-status {
+    background: #e5f2f5;
+
+    color: #347187;
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: bold;
+}
+
+
+/* ================= RESULTS ================= */
+
+.results-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 20px;
+}
+
+.results-grid .card {
+    margin-bottom: 0;
+}
+
+
+/* ================= RISK ================= */
+
+.risk-content {
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+}
+
+.risk-circle {
+    width: 135px;
+    height: 135px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background:
+        conic-gradient(
+            #9ca8af 0deg,
+            #e9edef 0deg
+        );
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.risk-circle::before {
+    content: "";
+
+    position: absolute;
+}
+
+.risk-circle > div {
+    width: 108px;
+    height: 108px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.risk-circle strong {
+    font-size: 25px;
+}
+
+.risk-circle span {
+    font-size: 11px;
+
+    color: #87939b;
+}
+
+.risk-info h2 {
+    font-size: 22px;
+
+    margin-bottom: 8px;
+}
+
+.risk-info p {
+    color: #6e7d87;
+
+    line-height: 1.5;
+
+    font-size: 13px;
+}
+
+.progress-container {
+    width: 100%;
+
+    height: 7px;
+
+    background: #e7ebee;
+
+    border-radius: 10px;
+
+    margin-top: 14px;
+
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+
+    width: 0%;
+
+    transition: width 0.5s;
+
+    background: #2f7895;
+}
+
+
+/* ================= ALERT ================= */
+
+.alert-content {
+    display: flex;
+
+    gap: 15px;
+
+    align-items: flex-start;
+}
+
+.alert-icon {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 50%;
+
+    background: #e8f6ed;
+
+    color: #26a35f;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 22px;
+
+    flex-shrink: 0;
+}
+
+.alert-content h2 {
+    font-size: 18px;
+
+    margin-bottom: 6px;
+}
+
+.alert-content p {
+    color: #6d7b84;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+.alert-content small {
+    display: block;
+
+    color: #a0abb2;
+
+    margin-top: 8px;
+}
+
+
+/* ================= MAP ================= */
+
+#map {
+    height: 390px;
+
+    width: 100%;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+.map-status {
+    background: #edf0f2;
+
+    color: #6d7880;
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: bold;
+}
+
+
+/* ================= TRAFFIC ================= */
+
+.traffic-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 20px;
+}
+
+.traffic-message {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 20px;
+
+    background: #f5f8fa;
+
+    border-radius: 12px;
+}
+
+.traffic-icon {
+    width: 55px;
+    height: 55px;
+
+    background: #e9eff3;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 25px;
+}
+
+.traffic-message h2 {
+    font-size: 17px;
+
+    margin-bottom: 6px;
+}
+
+.traffic-message p {
+    font-size: 13px;
+
+    color: #6e7c86;
+
+    line-height: 1.5;
+}
+
+
+/* ================= SAFE ROUTE ================= */
+
+.safe-route {
+    background: #edf8f1;
+
+    border: 1px solid #c9e9d5;
+
+    border-radius: 12px;
+
+    padding: 18px;
+}
+
+.route-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 12px;
+}
+
+.route-header > span {
+    font-size: 25px;
+}
+
+.route-header h3 {
+    font-size: 15px;
+}
+
+.route-header p {
+    font-size: 11px;
+
+    color: #6e8376;
+
+    margin-top: 3px;
+}
+
+#safeRoute {
+    background: white;
+
+    border-radius: 8px;
+
+    padding: 12px;
+
+    color: #38684a;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+/* ================= ROADS ================= */
+
+.roads-section {
+    margin-top: 20px;
+
+    padding-top: 18px;
+
+    border-top: 1px solid #e6ebee;
+}
+
+.roads-section h3 {
+    font-size: 14px;
+
+    margin-bottom: 12px;
+}
+
+#roads {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+.road {
+    background: #fff0ef;
+
+    color: #b43d39;
+
+    padding: 8px 12px;
+
+    border-radius: 7px;
+
+    font-size: 12px;
+
+    font-weight: bold;
+}
+
+.road-placeholder {
+    color: #88959e;
+
+    font-size: 12px;
+}
+/* ================= SAFE ROADS ================= */
+
+.safe-roads-section {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid #e6ebee;
+}
+
+.safe-roads-section h3 {
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+#safeRoads {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.safe-road {
+    background: #e8f7ee;
+    color: #208c54;
+    padding: 8px 12px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: bold;
+    border: 1px solid #c9e9d5;
+}
+
+.safe-road-placeholder {
+    color: #88959e;
+    font-size: 12px;
+}
+
+
+/* ================= AI ================= */
+
+.analysis-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 15px;
+}
+
+.analysis-box {
+    border: 1px solid #e2e8ec;
+
+    border-radius: 10px;
+
+    padding: 18px;
+}
+
+.analysis-box span {
+    display: block;
+
+    font-size: 12px;
+
+    color: #71808a;
+
+    margin-bottom: 8px;
+}
+
+.analysis-box strong {
+    display: block;
+
+    font-size: 20px;
+
+    margin-bottom: 7px;
+}
+
+.analysis-box p {
+    color: #7c8991;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+/* ================= FOOTER ================= */
+
+footer {
+    padding: 20px 5px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    font-size: 11px;
+
+    color: #89959d;
+}
+
+
+/* ================= RISK COLORS ================= */
+
+.low {
+    color: #20945a !important;
+}
+
+.moderate {
+    color: #a07b00 !important;
+}
+
+.high {
+    color: #c75a20 !important;
+}
+
+.critical {
+    color: #c73535 !important;
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 1100px) {
+
+    .inputs {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+    .results-grid,
+    .traffic-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .analysis-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 750px) {
+
+    .sidebar {
+        position: relative;
+
+        width: 100%;
+        height: auto;
+    }
+
+    .sidebar-bottom {
+        display: none;
+    }
+
+    nav {
+        display: none;
+    }
+
+    .main {
+        margin-left: 0;
+
+        padding: 15px;
+    }
+
+    .topbar {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 12px;
+    }
+
+    .topbar h1 {
+        font-size: 22px;
+    }
+
+    .location-bar {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 10px;
+    }
+
+    .inputs {
+        grid-template-columns: 1fr;
+    }
+
+    .run-area {
+        flex-direction: column;
+    }
+
+    .run-button,
+    .demo-button,
+    .reset-button {
+        width: 100%;
+    }
+
+    .risk-content {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    footer {
+        flex-direction: column;
+
+        gap: 8px;
+    }@media (max-width: 750px) {
+
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    /* your remaining existing mobile CSS */
+
+    footer {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+
+/* ================= SAFE ROADS ================= */
+
+.safe-roads-section {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid #e6ebee;
+}
+
+.safe-roads-section h3 {
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+#safeRoads {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.safe-road {
+    background: #edf8f1;
+    color: #28734a;
+    padding: 8px 12px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: bold;
+    border: 1px solid #c9e9d5;
+}
+
+.safe-road-placeholder {
+    color: #88959e;
+    font-size: 12px;
+}
+
+}
+
