@@ -1,0 +1,36 @@
+{
+  "model_b_flood_risk": {
+    "raw_only": {
+      "accuracy": 0.8367501898253606,
+      "f1_macro": 0.8103250197539853,
+      "recall_danger": 0.9066265060240963
+    },
+    "with_engineered": {
+      "accuracy": 0.8425208807896735,
+      "f1_macro": 0.8139633714296259,
+      "recall_danger": 0.891566265060241
+    },
+    "delta": {
+      "accuracy": 0.005770690964312819,
+      "f1_macro": 0.0036383516756406387,
+      "recall_danger": -0.015060240963855387
+    }
+  },
+  "model_a_rain_category": {
+    "raw_only": {
+      "accuracy": 0.47289293849658315,
+      "f1_macro": 0.42102403492565077,
+      "recall_extreme": 0.4007561436672968
+    },
+    "with_engineered": {
+      "accuracy": 0.4416097190584662,
+      "f1_macro": 0.3953242821987683,
+      "recall_extreme": 0.4054820415879017
+    },
+    "delta": {
+      "accuracy": -0.03128321943811696,
+      "f1_macro": -0.025699752726882463,
+      "recall_extreme": 0.0047258979206049045
+    }
+  }
+}

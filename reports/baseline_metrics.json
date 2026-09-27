@@ -1,0 +1,10 @@
+{
+  "model_a_rf": {
+    "accuracy": 0.4416097190584662,
+    "recall_extreme": 0.4054820415879017
+  },
+  "model_b_rf": {
+    "accuracy": 0.8425208807896735,
+    "recall_danger": 0.891566265060241
+  }
+}

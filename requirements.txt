@@ -1,0 +1,17 @@
+pandas
+numpy
+scikit-learn
+joblib
+
+# gradient boosting - if this installs, train_boosted.py uses it
+# automatically instead of sklearn's HistGradientBoostingClassifier
+xgboost
+
+# real Shapley-value explanations - if this installs, explain.py uses
+# it automatically instead of the permutation-importance fallback
+shap
+
+# API layer (stage 7)
+fastapi
+uvicorn[standard]
+pydantic

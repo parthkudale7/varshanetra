@@ -1,0 +1,12 @@
+{
+  "model_a_boosted": {
+    "engine": "xgboost",
+    "accuracy": 0.4903568716780562,
+    "recall_extreme": 0.32608695652173914
+  },
+  "model_b_boosted": {
+    "engine": "xgboost",
+    "accuracy": 0.8610478359908884,
+    "recall_danger": 0.891566265060241
+  }
+}
