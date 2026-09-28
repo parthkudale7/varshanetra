@@ -380,6 +380,12 @@
   .route-body{padding:16px 18px;}
   .route-row{display:flex; align-items:center; gap:10px; margin-bottom:10px;}
   .route-row i{width:18px; text-align:center; font-size:.82rem;}
+  .route-icon-label{
+    font-size:.65rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    padding:2px 7px; border-radius:20px; white-space:nowrap; flex-shrink:0;
+  }
+  .route-icon-label.from{background:rgba(34,197,94,.15); color:#22c55e; border:1px solid rgba(34,197,94,.3);}
+  .route-icon-label.to  {background:rgba(239,68,68,.15);  color:#ef4444; border:1px solid rgba(239,68,68,.3);}
   .route-row select{
     flex:1; background:var(--panel-2); border:1px solid var(--border);
     color:var(--ink); padding:9px 12px; border-radius:10px; font-size:.78rem;
@@ -609,8 +615,8 @@
             <h3>Safe Route Advisory</h3>
           </div>
           <div class="route-body">
-            <div class="route-row"><i class="fa-solid fa-circle-dot" style="color:var(--green)"></i><select id="fromWard"></select></div>
-            <div class="route-row"><i class="fa-solid fa-location-dot" style="color:var(--red)"></i><select id="toWard"></select></div>
+            <div class="route-row"><i class="fa-solid fa-circle-dot" style="color:var(--green)"></i><span class="route-icon-label from">Your Location</span><select id="fromWard"></select></div>
+            <div class="route-row"><i class="fa-solid fa-location-dot" style="color:var(--red)"></i><span class="route-icon-label to">Destination</span><select id="toWard"></select></div>
             <button id="routeBtn" type="button">Check Route Safety</button>
             <div id="routeResult"></div>
           </div>
@@ -774,8 +780,8 @@
           <div class="panel">
             <div class="panel-head"><i class="fa-solid fa-route" style="color:var(--accent)"></i><h3>Route Safety Advisory</h3></div>
             <div class="route-body">
-              <div class="route-row"><i class="fa-solid fa-circle-dot" style="color:var(--green)"></i><select id="fromWard2"></select></div>
-              <div class="route-row"><i class="fa-solid fa-location-dot" style="color:var(--red)"></i><select id="toWard2"></select></div>
+              <div class="route-row"><i class="fa-solid fa-circle-dot" style="color:var(--green)"></i><span class="route-icon-label from">Your Location</span><select id="fromWard2"></select></div>
+              <div class="route-row"><i class="fa-solid fa-location-dot" style="color:var(--red)"></i><span class="route-icon-label to">Destination</span><select id="toWard2"></select></div>
               <button id="routeBtn2" type="button">Check Route Safety</button>
               <div id="routeResult2"></div>
             </div>
@@ -1078,6 +1084,7 @@ function render(){
   if(currentView === 'forecast')  renderForecastGrid();
   if(currentView === 'map')       renderMap2();
   if(currentView === 'alerts')    renderFullAlertLog();
+  if(currentView === 'routes')    renderRoutesView();
 
   const current = {};
   wards.forEach(w => current[w.ward] = currentPred(w.ward));
