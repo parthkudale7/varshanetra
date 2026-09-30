@@ -193,4 +193,4 @@ Developed by Team Vortex as an AI/ML-based solution for heavy rainfall early war
 
 ## License
 
-zceor
+ZCOER - see LICENSE .
