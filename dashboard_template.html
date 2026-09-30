@@ -7,7 +7,7 @@
 <title>Varshanetra — Flood Risk Intelligence Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
   :root{
@@ -36,13 +36,17 @@
     --grey:#64748B;
     --grey-soft:rgba(100,116,139,.08);
     --mono:'JetBrains Mono', ui-monospace, monospace;
-    --sans:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --sans:'Plus Jakarta Sans', 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    --heading:'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
     --radius:12px;
     --radius-lg:16px;
     --shadow-sm:0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
-    --shadow:0 4px 6px -1px rgba(0,0,0,.07), 0 2px 4px -2px rgba(0,0,0,.05);
-    --shadow-lg:0 10px 25px -3px rgba(0,0,0,.08), 0 4px 10px -4px rgba(0,0,0,.04);
-    --transition:all .2s cubic-bezier(.4,0,.2,1);
+    --shadow:0 6px 20px -2px rgba(0,0,0,.1), 0 3px 8px -3px rgba(0,0,0,.07);
+    --shadow-lg:0 16px 32px -4px rgba(0,0,0,.12), 0 6px 14px -6px rgba(0,0,0,.07);
+    --shadow-accent:0 8px 24px -4px rgba(26,115,232,.22);
+    --transition:all .22s cubic-bezier(.4,0,.2,1);
+    --transition-slow:all .4s cubic-bezier(.4,0,.2,1);
+    --transition-spring:all .3s cubic-bezier(.34,1.56,.64,1);
   }
 
   *{box-sizing:border-box; margin:0; padding:0;}
@@ -50,10 +54,17 @@
   body{
     background:var(--bg); color:var(--ink); font-family:var(--sans);
     -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-    font-size:14px; line-height:1.5;
+    font-size:14px; line-height:1.6;
+    letter-spacing:.01em;
   }
   .mono{font-family:var(--mono);}
   a{color:inherit; text-decoration:none;}
+
+  /* ====== HEADING FONT ====== */
+  h1,h2,h3,h4,h5,.brand .name,.stat-card .value{
+    font-family:var(--heading);
+    font-feature-settings:'ss01','cv01';
+  }
 
   /* ========== LAYOUT ========== */
   .app{display:grid; grid-template-columns:260px 1fr; min-height:100vh;}
@@ -89,18 +100,36 @@
     display:flex; align-items:center; gap:12px;
     padding:10px 14px; border-radius:10px;
     color:rgba(255,255,255,.55); font-size:.85rem; font-weight:500;
-    transition:var(--transition); position:relative;
+    transition:var(--transition); position:relative; overflow:hidden;
   }
-  nav.sidenav a i{width:18px; text-align:center; font-size:.9rem;}
-  nav.sidenav a:hover{background:var(--sidebar-hover); color:rgba(255,255,255,.85);}
+  nav.sidenav a i{
+    width:18px; text-align:center; font-size:.9rem;
+    transition:var(--transition-spring);
+    display:inline-block;
+  }
+  nav.sidenav a:hover{
+    background:var(--sidebar-hover); color:rgba(255,255,255,.9);
+    padding-left:18px;
+  }
+  nav.sidenav a:hover i{
+    transform:scale(1.25) rotate(-8deg);
+    color:#7ABAFF;
+  }
   nav.sidenav a.active{
     background:var(--sidebar-active); color:#fff;
     box-shadow:0 4px 12px rgba(26,115,232,.3);
   }
+  nav.sidenav a.active i{transform:scale(1.1);}
   nav.sidenav a .badge{
     margin-left:auto; background:var(--red); color:#fff; font-size:.6rem;
     font-family:var(--mono); font-weight:700;
     padding:2px 7px; border-radius:100px; min-width:20px; text-align:center;
+    animation:badge-bounce 1.8s ease-in-out infinite;
+  }
+  @keyframes badge-bounce{
+    0%,100%{transform:translateY(0);}
+    40%{transform:translateY(-3px);}
+    60%{transform:translateY(-1px);}
   }
 
   .side-block{
@@ -133,10 +162,11 @@
     box-shadow:0 1px 3px rgba(0,0,0,.03);
   }
   header.topbar .titles h1{
-    font-size:1.15rem; font-weight:800; color:var(--ink);
-    letter-spacing:-.01em;
+    font-size:1.18rem; font-weight:700; color:var(--ink);
+    letter-spacing:-.02em;
+    font-family:var(--heading);
   }
-  header.topbar .titles p{font-size:.76rem; color:var(--ink-soft); margin-top:2px; font-weight:400;}
+  header.topbar .titles p{font-size:.76rem; color:var(--ink-soft); margin-top:2px; font-weight:400; letter-spacing:.01em;}
   header.topbar .spacer{flex:1;}
 
   .system-status{
@@ -249,24 +279,60 @@
   .stats{display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin-bottom:20px;}
   @media(max-width:1200px){.stats{grid-template-columns:repeat(3,1fr);}}
   @media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr);}}
+
   .stat-card{
     background:var(--panel); border:1px solid var(--border);
     border-radius:var(--radius); padding:16px 18px;
     box-shadow:var(--shadow-sm);
-    transition:var(--transition);
+    transition:transform .28s cubic-bezier(.34,1.2,.64,1),
+               box-shadow .22s ease,
+               border-color .22s ease;
+    position:relative; overflow:hidden;
   }
+
+  /* Shimmer sweep overlay */
+  .stat-card::before{
+    content:'';
+    position:absolute; top:0; left:-120%; width:60%; height:100%;
+    background:linear-gradient(100deg,
+      transparent 0%,
+      rgba(255,255,255,.55) 50%,
+      transparent 100%);
+    transform:skewX(-20deg);
+    transition:left .55s ease;
+    pointer-events:none;
+  }
+  .stat-card:hover::before{left:160%;}
+
+  /* Bottom accent bar */
+  .stat-card::after{
+    content:''; position:absolute; bottom:0; left:0; right:0; height:2.5px;
+    background:linear-gradient(90deg, var(--accent), rgba(26,115,232,.0));
+    transform:scaleX(0); transform-origin:left;
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+  }
+  .stat-card:hover::after{transform:scaleX(1);}
+
   .stat-card:hover{
-    box-shadow:var(--shadow); transform:translateY(-2px);
-    border-color:var(--accent-glow);
+    box-shadow:var(--shadow), 0 0 0 1px rgba(26,115,232,.12);
+    transform:translateY(-5px) scale(1.01);
+    border-color:rgba(26,115,232,.22);
   }
+  .stat-card:active{transform:translateY(-2px) scale(.99);}
   .stat-card .top{display:flex; align-items:center; gap:10px; margin-bottom:12px;}
   .stat-card .icon{
     width:36px; height:36px; border-radius:10px;
     display:flex; align-items:center; justify-content:center;
     font-size:.88rem; flex:none;
+    transition:var(--transition-spring);
   }
-  .stat-card .label{font-size:.72rem; color:var(--ink-soft); font-weight:500; line-height:1.3;}
-  .stat-card .value{font-family:var(--mono); font-size:1.45rem; font-weight:700; line-height:1; color:var(--ink);}
+  .stat-card:hover .icon{transform:scale(1.18) rotate(-6deg);}
+  .stat-card .label{font-size:.72rem; color:var(--ink-soft); font-weight:500; line-height:1.3; font-family:var(--sans);}
+  .stat-card .value{
+    font-family:var(--heading);
+    font-size:1.5rem; font-weight:700; line-height:1; color:var(--ink);
+    letter-spacing:-.02em;
+  }
   .stat-card .sub{font-size:.68rem; color:var(--ink-dim); margin-top:6px; font-weight:400;}
   .stat-card .badge{
     display:inline-block; font-family:var(--mono); font-size:.64rem; font-weight:700;
@@ -278,14 +344,24 @@
     background:var(--panel); border:1px solid var(--border);
     border-radius:var(--radius-lg); overflow:hidden;
     box-shadow:var(--shadow-sm);
-    transition:var(--transition);
+    transition:transform .26s cubic-bezier(.4,0,.2,1),
+               box-shadow .26s cubic-bezier(.4,0,.2,1),
+               border-color .22s ease;
   }
-  .panel:hover{box-shadow:var(--shadow);}
+  .panel:hover{
+    box-shadow:var(--shadow-lg);
+    transform:translateY(-3px);
+    border-color:rgba(26,115,232,.15);
+  }
+  .panel:active{transform:translateY(-1px);}
   .panel-head{
     display:flex; align-items:center; gap:10px;
     padding:16px 20px; border-bottom:1px solid var(--border-soft);
   }
-  .panel-head h3{margin:0; font-size:.9rem; font-weight:700; flex:1; color:var(--ink);}
+  .panel-head h3{
+    margin:0; font-size:.92rem; font-weight:700; flex:1; color:var(--ink);
+    font-family:var(--heading); letter-spacing:-.01em;
+  }
   .panel-head .view-all{font-size:.72rem; color:var(--accent); font-weight:600; cursor:default;}
   .panel-head input.search{
     background:var(--panel-2); border:1px solid var(--border); border-radius:8px;
@@ -306,10 +382,10 @@
   .maingrid{display:grid; grid-template-columns:1fr 380px; gap:16px; margin-bottom:16px;}
   @media(max-width:1000px){.maingrid{grid-template-columns:1fr;}}
 
-  #mapWrap{position:relative; height:460px; background:var(--panel-2);}
-  #mapSvg{width:100%; height:100%; display:block;}
+  #mapWrap{position:relative; width:100%; background:var(--panel-2);}
+  #mapSvg{width:100%; height:auto; display:block;}
   .legend{
-    position:absolute; left:14px; top:14px;
+    position:absolute; left:14px; bottom:14px;
     background:rgba(255,255,255,.92); backdrop-filter:blur(12px);
     border:1px solid var(--border); border-radius:10px; padding:10px 14px;
     box-shadow:var(--shadow);
@@ -321,17 +397,31 @@
   .mapctrls button{
     width:32px; height:32px; background:var(--panel); border:1px solid var(--border);
     color:var(--ink); border-radius:8px; cursor:pointer; font-size:.85rem;
-    box-shadow:var(--shadow-sm); transition:var(--transition);
+    box-shadow:var(--shadow-sm); transition:var(--transition-spring);
   }
-  .mapctrls button:hover{border-color:var(--accent); color:var(--accent);}
+  .mapctrls button:hover{
+    border-color:var(--accent); color:var(--accent);
+    transform:scale(1.12);
+    box-shadow:0 4px 12px rgba(26,115,232,.2);
+  }
+  .mapctrls button:active{transform:scale(.95);}
 
   .ward-dot{cursor:pointer;}
-  .ward-label{font-family:var(--mono); font-size:9px; fill:var(--ink-dim); pointer-events:none;}
-  .ward-label.selected{fill:var(--ink); font-weight:700;}
-  .pulse{animation:pulse-ring 1.7s ease-out infinite;}
+  .ward-label{
+    font-family:var(--sans); font-size:10.5px; font-weight:600;
+    fill:#1A202C; pointer-events:none;
+    text-transform:capitalize;
+    letter-spacing:.02em;
+  }
+  .ward-label.selected{fill:var(--accent); font-weight:700;}
+  .ward-label-bg{
+    fill:rgba(255,255,255,.92);
+    rx:4px; ry:4px;
+    pointer-events:none;
+  }
+  .pulse{animation:none;}
   @keyframes pulse-ring{0%{opacity:.5; r:15;} 100%{opacity:0; r:28;}}
-  .match-ring{fill:none; stroke:var(--ink); stroke-width:1.5; opacity:0;}
-  .match-ring.show{opacity:.6;}
+  .match-ring{display:none;}
 
   /* ========== RIGHT COLUMN ========== */
   .rightcol{display:flex; flex-direction:column; gap:16px;}
@@ -368,11 +458,12 @@
   .alert-item{
     display:flex; gap:12px; padding:12px 18px;
     border-bottom:1px solid var(--border-soft);
-    transition:var(--transition);
+    transition:background .18s ease, padding-left .2s cubic-bezier(.4,0,.2,1);
   }
   .alert-item:last-child{border-bottom:none;}
-  .alert-item:hover{background:var(--panel-2);}
-  .alert-item i{margin-top:3px; font-size:.9rem;}
+  .alert-item:hover{background:var(--panel-2); padding-left:22px;}
+  .alert-item i{margin-top:3px; font-size:.9rem; transition:var(--transition-spring);}
+  .alert-item:hover i{transform:scale(1.2);}
   .alert-item .txt b{display:block; font-size:.8rem; margin-bottom:2px; font-weight:600; color:var(--ink);}
   .alert-item .txt p{margin:0; font-size:.72rem; color:var(--ink-soft);}
   .alert-item .time{margin-left:auto; font-family:var(--mono); font-size:.62rem; color:var(--ink-dim); white-space:nowrap; font-weight:500;}
@@ -393,12 +484,32 @@
 
   #routeBtn, #routeBtn2{
     width:100%; background:var(--accent); border:none; color:#fff;
-    font-weight:700; font-size:.82rem; font-family:var(--sans);
+    font-weight:700; font-size:.82rem; font-family:var(--heading);
     padding:11px; border-radius:10px; cursor:pointer; margin-top:6px;
-    transition:var(--transition);
-    box-shadow:0 2px 8px rgba(26,115,232,.2);
+    transition:transform .22s cubic-bezier(.34,1.4,.64,1),
+               box-shadow .22s ease,
+               filter .15s ease;
+    box-shadow:0 2px 8px rgba(26,115,232,.22);
+    letter-spacing:.01em;
+    position:relative; overflow:hidden;
   }
-  #routeBtn:hover, #routeBtn2:hover{filter:brightness(1.08); transform:translateY(-1px); box-shadow:0 4px 12px rgba(26,115,232,.3);}
+  #routeBtn::after, #routeBtn2::after{
+    content:'';
+    position:absolute; inset:0;
+    background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.25) 50%,transparent 70%);
+    transform:translateX(-100%);
+    transition:transform .45s ease;
+  }
+  #routeBtn:hover::after, #routeBtn2:hover::after{transform:translateX(100%);}
+  #routeBtn:hover, #routeBtn2:hover{
+    transform:translateY(-2px) scale(1.01);
+    box-shadow:var(--shadow-accent);
+    filter:brightness(1.06);
+  }
+  #routeBtn:active, #routeBtn2:active{
+    transform:translateY(0) scale(.97);
+    box-shadow:0 1px 4px rgba(26,115,232,.2);
+  }
   #routeResult, #routeResult2{
     margin-top:12px; font-size:.74rem; color:var(--ink-soft);
     background:var(--panel-2); border:1px solid var(--border-soft);
@@ -408,16 +519,19 @@
   .feed-row{
     display:flex; align-items:center; gap:10px;
     padding:10px 18px; border-bottom:1px solid var(--border-soft);
-    font-size:.78rem; transition:var(--transition);
+    font-size:.78rem;
+    transition:background .18s ease, padding-left .2s cubic-bezier(.4,0,.2,1);
   }
   .feed-row:last-child{border-bottom:none;}
-  .feed-row:hover{background:var(--panel-2);}
-  .feed-row .name{flex:1; font-weight:500; color:var(--ink);}
+  .feed-row:hover{background:var(--panel-2); padding-left:22px;}
+  .feed-row .name{flex:1; font-weight:500; color:var(--ink); font-family:var(--sans);}
   .feed-status{
     font-family:var(--mono); font-size:.62rem; font-weight:700;
     padding:4px 10px; border-radius:100px; text-transform:uppercase;
     letter-spacing:.02em;
+    transition:var(--transition-spring);
   }
+  .feed-row:hover .feed-status{transform:scale(1.06);}
 
   /* ========== FOOTER ========== */
   footer{
@@ -443,9 +557,153 @@
   ::-webkit-scrollbar-thumb{background:var(--border); border-radius:3px;}
   ::-webkit-scrollbar-thumb:hover{background:var(--ink-dim);}
 
-  /* ========== ANIMATIONS ========== */
-  @keyframes fadeIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
-  .view{animation:fadeIn .3s ease-out;}
+  /* ========== VIEW TRANSITION ========== */
+  @keyframes fadeIn{
+    from{opacity:0; transform:translateY(10px);}
+    to  {opacity:1; transform:translateY(0);}
+  }
+  .view{animation:fadeIn .35s cubic-bezier(.4,0,.2,1);}
+
+  /* ========== GLOBAL: ALL VIEWS ========== */
+
+  /* --- Zone table row hover slide (all views) --- */
+  table.zones tr{
+    cursor:pointer;
+    transition:background .15s ease;
+  }
+  table.zones tr:hover td{background:var(--panel-2);}
+  table.zones td{
+    transition:background .15s ease;
+  }
+
+  /* --- Location banner subtle shine --- */
+  .location-banner{
+    position:relative; overflow:hidden;
+  }
+  .location-banner::after{
+    content:'';
+    position:absolute; top:0; left:-80%; width:50%; height:100%;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.07),transparent);
+    transform:skewX(-20deg);
+    animation:banner-shine 5s ease-in-out infinite;
+  }
+  @keyframes banner-shine{
+    0%{left:-80%;} 50%{left:150%;} 100%{left:150%;}
+  }
+
+  /* --- Ts-pill bounce --- */
+  .ts-pill{
+    transition:transform .18s cubic-bezier(.34,1.6,.64,1),
+               background .18s ease,
+               color .18s ease,
+               border-color .18s ease,
+               box-shadow .18s ease;
+  }
+  .ts-pill:hover{transform:translateY(-2px);}
+  .ts-pill:active{transform:scale(.94);}
+  .ts-pill.active{transform:translateY(-1px);}
+
+  /* --- Bar chart hover (Dashboard) --- */
+  .bar-col .bar{
+    transition:height .4s cubic-bezier(.4,0,.2,1), opacity .2s, filter .2s;
+  }
+  .bar-col:hover .bar{opacity:.85; filter:brightness(1.12);}
+  .bar-col:hover .val{color:var(--accent); font-weight:700;}
+
+  /* --- Status badge pop (all views) --- */
+  .status-badge{
+    transition:var(--transition-spring);
+    cursor:default;
+  }
+  .status-badge:hover{transform:scale(1.08);}
+
+  /* --- Maptoggle button spring (all views with maps) --- */
+  .maptoggle button{
+    transition:var(--transition-spring);
+  }
+  .maptoggle button:hover{transform:scale(1.06);}
+  .maptoggle button:active{transform:scale(.94);}
+
+  /* --- Ward dot hover glow (both map views) --- */
+  .ward-dot{
+    transition:filter .2s ease;
+  }
+  .ward-dot:hover{filter:drop-shadow(0 0 6px rgba(26,115,232,.6));}
+
+  /* --- Forecast grid cards (Flood Prediction view) --- */
+  #forecastGrid > div{
+    transition:background .15s ease, box-shadow .22s ease, transform .22s cubic-bezier(.34,1.2,.64,1);
+    cursor:default;
+  }
+  #forecastGrid > div:hover{
+    background:var(--accent-soft) !important;
+    box-shadow:inset 0 0 0 1px rgba(26,115,232,.2);
+    transform:scale(1.03);
+    z-index:1;
+  }
+
+  /* --- Risk Analysis: feature importance bars --- */
+  #importanceChart > div{
+    transition:transform .2s ease, opacity .2s ease;
+  }
+  #importanceChart > div:hover{transform:scaleX(1.01); opacity:.85;}
+
+  /* --- Historical chart bars --- */
+  #historicalChart > div{
+    transition:opacity .18s ease, box-shadow .18s ease;
+  }
+  #historicalChart > div:hover{
+    opacity:.88;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+  }
+
+  /* --- Reports print button --- */
+  #reportPanel .panel-head button{
+    transition:transform .22s cubic-bezier(.34,1.4,.64,1),
+               box-shadow .2s ease,
+               filter .15s ease;
+  }
+  #reportPanel .panel-head button:hover{
+    transform:translateY(-2px) scale(1.03);
+    box-shadow:0 6px 16px rgba(26,115,232,.25);
+    filter:brightness(1.07);
+  }
+  #reportPanel .panel-head button:active{
+    transform:scale(.96);
+  }
+
+  /* --- Alert log rows (Alerts view full log) --- */
+  #fullAlertsList .alert-item{
+    transition:background .15s ease, padding-left .18s cubic-bezier(.4,0,.2,1);
+  }
+  #fullAlertsList .alert-item:hover{
+    background:var(--panel-2); padding-left:22px;
+  }
+  #fullAlertsList .alert-item:hover i{transform:scale(1.15);}
+
+  /* --- Route rank table rows (Routes view) --- */
+  #routeRankRows tr{
+    transition:background .15s ease;
+  }
+
+  /* --- Select dropdowns focus ring (all views) --- */
+  select{
+    transition:border-color .18s ease, box-shadow .18s ease;
+  }
+  select:focus{
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-glow);
+  }
+
+  /* --- Panel icon bounce on panel head hover --- */
+  .panel-head > i{
+    transition:var(--transition-spring);
+    display:inline-block;
+  }
+  .panel:hover .panel-head > i{
+    transform:scale(1.2) rotate(-8deg);
+  }
 </style>
 </head>
 <body>
@@ -553,7 +811,7 @@
             </div>
           </div>
           <div id="mapWrap">
-            <svg id="mapSvg" viewBox="0 0 600 460" xmlns="http://www.w3.org/2000/svg"></svg>
+            <svg id="mapSvg" viewBox="0 0 600 560" xmlns="http://www.w3.org/2000/svg"></svg>
             <div class="legend">
               <div class="lt">Flood Risk</div>
               <div class="li"><span class="sw" style="background:var(--red)"></span>Danger</div>
@@ -732,8 +990,8 @@
               <button id="mapModeVuln">Terrain Vulnerability</button>
             </div>
           </div>
-          <div id="mapWrap2" style="position:relative; height:560px; background:var(--panel-2)">
-            <svg id="mapSvg2" viewBox="0 0 600 460" xmlns="http://www.w3.org/2000/svg"></svg>
+          <div id="mapWrap2" style="position:relative; width:100%; background:var(--panel-2)">
+            <svg id="mapSvg2" viewBox="0 0 600 560" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;"></svg>
             <div class="legend" id="legend2">
               <div class="lt">Flood Risk</div>
               <div class="li"><span class="sw" style="background:var(--red)"></span>Danger</div>
@@ -954,10 +1212,10 @@ document.getElementById('routeBtn2').addEventListener('click', () => checkRoute(
 // --- map projection ---
 const lats = wards.map(w=>w.lat), lons = wards.map(w=>w.lon);
 const latMin=Math.min(...lats), latMax=Math.max(...lats), lonMin=Math.min(...lons), lonMax=Math.max(...lons);
-const PAD=55;
+const PAD=70;
 function project(lat,lon){
   const x = PAD + (lon-lonMin)/(lonMax-lonMin) * (600-2*PAD);
-  const y = PAD + (1-(lat-latMin)/(latMax-latMin)) * (460-2*PAD);
+  const y = PAD + (1-(lat-latMin)/(latMax-latMin)) * (560-2*PAD);
   return [x,y];
 }
 
@@ -972,11 +1230,11 @@ function buildMap(){
   grid.setAttribute('opacity','0.35');
   for(let gx=0; gx<=600; gx+=40){
     const l = document.createElementNS('http://www.w3.org/2000/svg','line');
-    l.setAttribute('x1',gx); l.setAttribute('y1',0); l.setAttribute('x2',gx); l.setAttribute('y2',460);
+    l.setAttribute('x1',gx); l.setAttribute('y1',0); l.setAttribute('x2',gx); l.setAttribute('y2',560);
     l.setAttribute('stroke','#CBD5E1'); l.setAttribute('stroke-width','1');
     grid.appendChild(l);
   }
-  for(let gy=0; gy<=460; gy+=40){
+  for(let gy=0; gy<=560; gy+=40){
     const l = document.createElementNS('http://www.w3.org/2000/svg','line');
     l.setAttribute('x1',0); l.setAttribute('y1',gy); l.setAttribute('x2',600); l.setAttribute('y2',gy);
     l.setAttribute('stroke','#CBD5E1'); l.setAttribute('stroke-width','1');
@@ -1005,24 +1263,28 @@ function buildMap(){
     g.setAttribute('data-ward', w.ward);
     g.style.cursor = 'pointer';
 
-    const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    ring.setAttribute('cx',x); ring.setAttribute('cy',y); ring.setAttribute('r',15);
-    ring.setAttribute('class','pulse-ring'); ring.setAttribute('fill','none'); ring.setAttribute('stroke-width','2');
-    g.appendChild(ring);
-
-    const match = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    match.setAttribute('cx',x); match.setAttribute('cy',y); match.setAttribute('r',10);
-    match.setAttribute('class','match-ring');
-    g.appendChild(match);
-
     const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
     dot.setAttribute('cx',x); dot.setAttribute('cy',y); dot.setAttribute('r',6);
     dot.setAttribute('class','ward-dot'); dot.setAttribute('stroke','#fff'); dot.setAttribute('stroke-width','2');
     g.appendChild(dot);
 
+    // Label with white pill background
+    const labelBg = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    const labelText = w.ward.replace('_',' ');
+    const estW = labelText.length * 6.4 + 10; // approx char width + padding
+    labelBg.setAttribute('x', x - estW/2);
+    labelBg.setAttribute('y', y - 30);
+    labelBg.setAttribute('width', estW);
+    labelBg.setAttribute('height', 16);
+    labelBg.setAttribute('rx', 4);
+    labelBg.setAttribute('ry', 4);
+    labelBg.setAttribute('fill', 'rgba(255,255,255,.92)');
+    labelBg.setAttribute('class','ward-label-bg');
+    g.appendChild(labelBg);
+
     const label = document.createElementNS('http://www.w3.org/2000/svg','text');
-    label.setAttribute('x',x); label.setAttribute('y',y-11); label.setAttribute('text-anchor','middle');
-    label.setAttribute('class','ward-label'); label.textContent = w.ward.replace('_',' ');
+    label.setAttribute('x',x); label.setAttribute('y',y-18); label.setAttribute('text-anchor','middle');
+    label.setAttribute('class','ward-label'); label.textContent = labelText;
     g.appendChild(label);
 
     g.addEventListener('click', () => { selectedWard = w.ward; render(); });
@@ -1092,15 +1354,10 @@ function render(){
     if(heat) heat.setAttribute('r', p.flood_risk==='danger' ? 62 : p.flood_risk==='warning' ? 50 : 40);
 
     const dot = g.querySelector('.ward-dot');
-    const ring = g.querySelector('.pulse-ring');
     const label = g.querySelector('.ward-label');
-    const match = g.querySelector('.match-ring');
     dot.setAttribute('fill', RISK_HEX[p.flood_risk]);
     dot.setAttribute('r', w.ward===selectedWard ? 8 : 6);
     label.classList.toggle('selected', w.ward===selectedWard);
-    match.classList.toggle('show', w.ward===selectedWard);
-    if(p.flood_risk==='danger'){ ring.setAttribute('stroke', RISK_HEX.danger); ring.classList.add('pulse'); }
-    else ring.classList.remove('pulse');
   });
 
   // --- stat cards ---
@@ -1376,10 +1633,10 @@ function buildMapInto(svgEl){
   grid.setAttribute('opacity','0.35');
   for(let gx=0; gx<=600; gx+=40){
     const l=document.createElementNS('http://www.w3.org/2000/svg','line');
-    l.setAttribute('x1',gx);l.setAttribute('y1',0);l.setAttribute('x2',gx);l.setAttribute('y2',460);
+    l.setAttribute('x1',gx);l.setAttribute('y1',0);l.setAttribute('x2',gx);l.setAttribute('y2',560);
     l.setAttribute('stroke','#CBD5E1');l.setAttribute('stroke-width','1'); grid.appendChild(l);
   }
-  for(let gy=0; gy<=460; gy+=40){
+  for(let gy=0; gy<=560; gy+=40){
     const l=document.createElementNS('http://www.w3.org/2000/svg','line');
     l.setAttribute('x1',0);l.setAttribute('y1',gy);l.setAttribute('x2',600);l.setAttribute('y2',gy);
     l.setAttribute('stroke','#CBD5E1');l.setAttribute('stroke-width','1'); grid.appendChild(l);
@@ -1403,9 +1660,23 @@ function buildMapInto(svgEl){
     dot.setAttribute('cx',x);dot.setAttribute('cy',y);dot.setAttribute('r',7);
     dot.setAttribute('class','ward-dot'); dot.setAttribute('stroke','#fff'); dot.setAttribute('stroke-width','2');
     g.appendChild(dot);
+    // Label with white pill background
+    const labelText2 = w.ward.replace('_',' ');
+    const estW2 = labelText2.length * 6.4 + 10;
+    const labelBg2 = document.createElementNS('http://www.w3.org/2000/svg','rect');
+    labelBg2.setAttribute('x', x - estW2/2);
+    labelBg2.setAttribute('y', y - 31);
+    labelBg2.setAttribute('width', estW2);
+    labelBg2.setAttribute('height', 16);
+    labelBg2.setAttribute('rx', 4);
+    labelBg2.setAttribute('ry', 4);
+    labelBg2.setAttribute('fill', 'rgba(255,255,255,.92)');
+    labelBg2.setAttribute('class','ward-label-bg');
+    g.appendChild(labelBg2);
+
     const label=document.createElementNS('http://www.w3.org/2000/svg','text');
-    label.setAttribute('x',x);label.setAttribute('y',y-12);label.setAttribute('text-anchor','middle');
-    label.setAttribute('class','ward-label'); label.textContent=w.ward.replace('_',' ');
+    label.setAttribute('x',x);label.setAttribute('y',y-19);label.setAttribute('text-anchor','middle');
+    label.setAttribute('class','ward-label'); label.textContent=labelText2;
     g.appendChild(label);
     svgEl.appendChild(g);
   });
