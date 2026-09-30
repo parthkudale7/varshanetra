@@ -1,140 +1,196 @@
-# Varshanetra - model prototype
+# Varshanetra
 
-Team Vortex, SIH26071. This is the ML piece behind the dashboard: two
-models (rainfall nowcast + flood risk) trained end to end, wrapped in
-a small API, with a swappable data feed so the live MOSDAC/IMD hookup
-can be dropped in later without touching the models.
+**AI/ML-based heavy rainfall early warning and inundation prediction system** for Pune, built for **Smart India Hackathon 2026**.
 
-## What's real and what isn't, right now
+> Developed as a prototype AI/ML solution for heavy rainfall early warning and inundation prediction. This is a hackathon/research-stage project — it is **not** a government-deployed or operationally-certified system. See [Current Prototype Status](#current-prototype-status) below.
 
-Trained on a synthetic monsoon dataset for 15 Pune wards
-(`data/make_dataset.py`), not real IMD/MOSDAC history - that access is
-still pending. Terrain numbers (elevation, slope, drainage, distance
-to river) are plausible placeholders per ward, not a DEM extract.
-Everything downstream - features, models, API - is real and runs on
-whatever data it's pointed at, so swapping in real data later is a
-data-loading change, not a rebuild. Say this plainly in the report;
-see `PROJECT_NOTES.md` for the longer version of this paragraph.
+**Team Vortex** · Team ID **ZIH120** · Problem Statement **SIH26071** · Theme: **Disaster Management**
 
-## Layout
+---
 
-```
-data/
-  wards.py          15 Pune wards with terrain attributes
-  make_dataset.py   builds the synthetic rainfall + flood-risk dataset
-features.py         feature engineering, shared by training + API
-train_baseline.py   Random Forest, stage 4
-train_boosted.py    XGBoost (falls back to sklearn HGB if xgboost
-                     isn't installed), stage 5
-ablation.py          raw vs engineered features, stage 6
-explain.py           SHAP if installed, else a permutation-importance
-                     fallback with the same interface
-predict_service.py   the actual predict(ward, history) call, no web
-                     framework dependency
-api/
-  data_feed.py       demo replay now, one place to wire up live data later
-  main.py            FastAPI wrapper around predict_service
-generate_demo_feed.py       bakes real predictions across a demo storm
-                             window -> reports/demo_feed.json
-generate_extra_views_data.py  historical stats + feature importance ->
-                               reports/historical_summary.json, feature_importance.json
-dashboard_template.html     the dashboard's HTML/CSS/JS, with data placeholders
-build_dashboard.py          fills the template with reports/ data -> dashboard.html
-dashboard.html               the actual dashboard - open this directly, already built
-reports/             metrics + ablation + demo-feed json, written by
-                     the scripts above
-models/              trained model files (joblib), written by the
-                     scripts above
-```
+## Problem
 
-## Running it
+Heavy rainfall events in Indian cities can escalate into urban flooding with very little warning. Forecasts are often city-wide or district-wide, when what actually matters is **which specific ward floods, and how much lead time residents get** — late or inaccurate warnings, rainfall forecasts that don't translate into flood forecasts, and a lack of actionable, ward-level inundation maps all compound the damage. Emergency response ends up reactive instead of predictive.
+
+## Solution
+
+Varshanetra is an AI-powered early-warning tool that predicts **where** in Pune flooding is likely during heavy rain, not just that heavy rain is coming. It runs two coupled models:
+
+- **Model A — Rainfall Outlook**: predicts rainfall severity (light / moderate / heavy / extreme) for the next 3 hours, from recent rainfall history.
+- **Model B — Flood Risk**: predicts ward-level flood risk (safe / watch / warning / danger) for the next 6 hours, combining Model A's rainfall signal with each ward's terrain — elevation, slope, drainage quality, and distance to the nearest river.
+
+Both feed a colour-coded risk map and a ward-by-ward dashboard, with an explainability layer that shows **why** a given ward was flagged, not just that it was.
+
+## Key Innovation
+
+Most rainfall-nowcasting systems stop at "how much rain." Varshanetra's flood-risk model explicitly fuses rainfall with **terrain vulnerability**, so the same rainfall total can correctly register as low risk in a well-drained, elevated ward and high risk in a low-lying, poorly-drained one next door — which is what actually determines flooding, not rainfall alone.
+
+An honest finding from the project's own ablation study (see [Model](#model)): the hand-engineered interaction features (`runoff_pressure`, `river_pressure`) rank as the model's *most*-relied-on inputs by internal importance, yet removing them doesn't measurably hurt test accuracy. Tree-based models evidently reconstruct the same interaction from the raw rainfall and terrain columns on their own. Reported here as-is, not smoothed over — it's a more credible result than a scripted "everything improved."
+
+## System Architecture
 
 ```
+Rainfall history (1h/3h/6h/24h) ──┐
+                                    ├──► Feature engineering ──► Model A (rainfall) ──┐
+Ward terrain (elevation, slope,   │                                                  │
+  drainage, distance to river) ───┘                                                  ▼
+                                                          Model B (flood risk, per ward)
+                                                                      │
+                                                                      ▼
+                                                    Explainability ("why" factors)
+                                                                      │
+                                                                      ▼
+                                                   FastAPI inference service (/predict)
+                                                                      │
+                                                                      ▼
+                                                        10-view dashboard (HTML/JS)
+```
+
+## Features
+
+- Two-model pipeline: rainfall nowcast (Model A) + terrain-aware flood risk (Model B)
+- Chronological train/validation/test split with a held-out real storm event — never a random shuffle, since that would let the model "see the future" (see [Model](#model))
+- Baseline-vs-engineered-features ablation study with real, reported numbers
+- Per-prediction explainability ("why" factors behind each flood-risk call)
+- Swappable data-feed design (`api/data_feed.py`): a demo-replay feed today, one function to change for a live MOSDAC/IMD feed later — nothing else in the pipeline needs to change
+- FastAPI inference service with a demo-mode endpoint for testing without a live sensor feed
+- A 10-view dashboard: Dashboard, Real-time Data, Rainfall Forecast, Inundation Map (real OpenStreetMap tiles, with a current-risk / terrain-vulnerability toggle), Risk Analysis, Safe Route Advisory, Alerts log, Historical Analysis, Reports (with print/PDF export), and About
+- Clearly labelled demo/replay mode throughout — the dashboard says so on screen, it isn't hidden
+
+## Technology Stack
+
+```
+Data & modelling:
+  Python, pandas, NumPy
+  scikit-learn (Random Forest baseline)
+  XGBoost — falls back automatically to scikit-learn's
+  HistGradientBoostingClassifier if xgboost isn't installed
+  joblib (model persistence)
+  SHAP — falls back to a permutation-importance based explainer
+  if shap isn't installed
+
+Backend:
+  FastAPI, Pydantic, Uvicorn
+
+Dashboard:
+  HTML, CSS, JavaScript (single self-contained file, no build step)
+  Leaflet.js + OpenStreetMap tiles (real map, live internet required)
+  Font Awesome (icons), IBM Plex Sans / Mono (typefaces)
+```
+
+## Project Structure
+
+```
+varshanetra-model/
+├── README.md
+├── PROJECT_NOTES.md            what's real vs. simulated, in detail
+├── requirements.txt
+│
+├── data/
+│   ├── wards.py                 15 Pune wards + terrain attributes
+│   └── make_dataset.py          builds the training dataset
+│
+├── features.py                  shared feature engineering (training + API)
+├── train_baseline.py            Random Forest models
+├── train_boosted.py             gradient-boosted upgrade (XGBoost or fallback)
+├── ablation.py                  raw-vs-engineered-features study
+├── explain.py                   per-prediction explainability
+├── predict_service.py           core predict(ward, history) logic
+│
+├── api/
+│   ├── data_feed.py              swappable demo/live data source
+│   └── main.py                    FastAPI app
+│
+├── generate_demo_feed.py         bakes real predictions for the dashboard demo
+├── generate_extra_views_data.py  historical stats + feature importance
+├── dashboard_template.html       dashboard source (HTML/CSS/JS)
+├── build_dashboard.py            fills the template with real model output
+├── dashboard.html                 the built dashboard — open this directly
+│
+├── models/                       trained model files (.joblib)
+└── reports/                      metrics, ablation results, demo data (.json)
+```
+
+## Installation
+
+### Prerequisites
+
+- Python 3.10+
+- (optional) Node/npm — not required; the dashboard is a single static HTML file
+
+### Setup
+
+```bash
+git clone https://github.com/parthkudale7/varshanetra.git
+cd varshanetra
+
+python -m venv venv
+venv\Scripts\activate        # Windows
+source venv/bin/activate     # macOS/Linux
+
 pip install -r requirements.txt
-
-python data/make_dataset.py      # writes data/dataset.csv
-python train_baseline.py         # writes models/*_rf.joblib
-python train_boosted.py          # writes models/*_boosted.joblib
-python ablation.py               # writes reports/ablation.json
-python explain.py                # prints one worked example
-
-uvicorn api.main:app --reload --port 8000
 ```
 
-Then, e.g.:
+## Running It
 
-```
-curl -X POST localhost:8000/predict -H "Content-Type: application/json" \
-  -d '{"ward": "kharadi", "mode": "demo"}'
-```
-
-`/demo/predict/{ward}` does the same thing as a plain GET, if you just
-want to check it in a browser.
-
-## Current numbers
-
-RF baseline vs boosted, on a chronological test split that includes
-one held-out storm event (see `reports/*.json` for exact figures):
-
-- Flood risk (model B): ~84-85% accuracy, ~90% recall on the "danger"
-  class specifically - the recall number matters more than accuracy
-  here, since missing a real danger case is the costly mistake.
-- Rainfall nowcast (model A): ~43-47% accuracy. Genuinely harder
-  problem - predicting the next 3h of rain from rainfall history alone,
-  with no live satellite/radar input yet, has a real ceiling. This
-  matches the "prediction accuracy during extreme events" challenge
-  already named on the feasibility slide, and is the strongest
-  argument for why the MOSDAC access actually matters, not just a box
-  to tick.
-- Ablation: the hand-engineered interaction features (runoff_pressure,
-  river_pressure, etc) made no meaningful difference for either model
-  once Random Forest already has the raw columns - trees pick up that
-  kind of interaction on their own. Worth a line in the report; not
-  worth overselling the feature engineering.
-
-## Dashboard
-
-`dashboard.html` in this folder is already built — open it directly in
-a browser, no server, no build step needed. It has 10 sections
-(sidebar nav): Dashboard, Real-time Data, Rainfall Forecast,
-Inundation Map, Risk Analysis, Safe Routes, Alerts, Historical
-Analysis, Reports, About — all driven by real model output, replayed
-across a real storm window, not hand-typed numbers.
-
-If you change the model, data, or the time window and want to rebuild
-it, run these in order:
-
-```
-python data/make_dataset.py          # (only if you changed data generation)
+```bash
+python data/make_dataset.py
 python train_baseline.py
 python train_boosted.py
 python ablation.py
-python generate_demo_feed.py         # bakes predictions across the demo window
-python generate_extra_views_data.py  # historical + feature-importance data
-python build_dashboard.py            # writes dashboard.html, ready to open
+python generate_demo_feed.py
+python generate_extra_views_data.py
+python build_dashboard.py
 ```
 
-`build_dashboard.py` reads `dashboard_template.html` plus everything
-in `reports/` and writes the final `dashboard.html` — that's the only
-file you actually open.
+Then open `dashboard.html` directly in a browser — no server required to view it.
 
-To go from this to a truly live dashboard: stand up `api/main.py`
-somewhere reachable from a browser (even just your own laptop on the
-same wifi as your demo screen), then replace the `const RAW = ...`
-line in `dashboard_template.html` with a `fetch()` call to your
-`/predict` endpoint instead, and rebuild. Same UI, live data.
+To run the live API instead:
 
+```bash
+uvicorn api.main:app --reload --port 8000
+curl -X POST localhost:8000/predict -H "Content-Type: application/json" -d '{"ward": "kharadi", "mode": "demo"}'
+```
 
+## API
 
-Two separate upgrades, don't conflate them:
+| Method | Path                    | Purpose                                             |
+|--------|-------------------------|------------------------------------------------------|
+| GET    | `/health`               | Service status                                       |
+| GET    | `/wards`                | List of all 15 Pune wards                             |
+| POST   | `/predict`               | Full prediction for a ward (`{"ward": "...", "mode": "demo"}`) |
+| GET    | `/demo/predict/{ward}`   | Same as above, as a plain GET — handy for a quick browser check |
 
-1. **Live current conditions** - implement `_fetch_live()` in
-   `api/data_feed.py`, point `DEFAULT_MODE` at `"live"`. Nothing else
-   changes; models and API are already shaped for it.
-2. **Retraining on real history** - once real historical rainfall/flood
-   data is available (IMD, data.gov.in, or MOSDAC's archive), replace
-   `data/make_dataset.py`'s output with that data in the same column
-   shape and rerun `train_baseline.py` / `train_boosted.py` as-is. This
-   is the upgrade that actually makes predictions reliable, not just
-   demoable - do it if there's time before the deadline, but it's not
-   required to have a working prototype.
+## Model
+
+Both models are trained and evaluated on a chronological split (never a random shuffle — see [`features.py`](features.py)), with one real storm window held out entirely for testing. Random Forest is the baseline; the boosted upgrade uses XGBoost where installed, or scikit-learn's `HistGradientBoostingClassifier` automatically otherwise — same family of model, same interface, no other code changes needed either way.
+
+Flood risk (Model B) reaches roughly 85% accuracy and around 90% recall on the "danger" class specifically — recall matters more than raw accuracy here, since missing a real danger case is the costly failure mode for an alert system. Rainfall nowcasting (Model A) is meaningfully harder — around 44–49% accuracy — which is a genuine finding, not a weak spot to hide: predicting the next 3 hours of rain from rainfall history alone, with no live satellite/radar input yet, has a real ceiling. It's the strongest argument for why real MOSDAC/IMD access matters. Exact current figures are in `reports/baseline_metrics.json` and `reports/boosted_metrics.json`.
+
+Full explanation of features, the ablation study, and the explainability approach: [`PROJECT_NOTES.md`](PROJECT_NOTES.md).
+
+## Current Prototype Status
+
+Stated plainly:
+
+- **Training data is synthetic**, not real IMD/MOSDAC history — built to be physically plausible (seasonal rainfall patterns, real storm events, terrain-driven flood risk), but not observed data. Real access is a registration process still in progress.
+- **Ward terrain values are plausible placeholders**, not extracted from a real elevation survey (DEM) — that extraction is the next real step once real terrain data is sourced.
+- **The dashboard replays a real trained model's output across a real storm window**, rather than connecting to a live feed — every number is genuine model output, just not live yet. This is stated on screen, not hidden.
+- **The Inundation Map uses real OpenStreetMap tiles** when the dashboard is opened with an internet connection; ward positions are real coordinates.
+- **Safe Route Advisory reports risk levels honestly but does not compute an actual road route** — that needs real road-network data and a routing engine, a solid next step rather than something to claim exists today.
+
+## Future Scope
+
+- Real historical rainfall/flood data (IMD, data.gov.in, or MOSDAC archive access) to retrain on — the single highest-impact upgrade
+- A real DEM and drainage-network extract, replacing the placeholder terrain values
+- Live MOSDAC/IMD access, replacing the demo replay feed (a one-function swap — see `api/data_feed.py`)
+- A real routing engine (e.g. OSRM) with actual road-network data, for genuine safe-route calculation
+- Expanded coverage beyond the current 15 wards
+
+## SIH 2026
+
+Developed by Team Vortex as an AI/ML-based solution for heavy rainfall early warning and inundation prediction, submitted for Smart India Hackathon 2026 evaluation. A working prototype and architecture, not a deployed or government-endorsed operational system.
+
+## License
+
+_Add a license of your choice here (e.g. MIT) before making the repository public, if you haven't already._
